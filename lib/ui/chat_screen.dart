@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:chat/widgets/input.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -7,6 +9,10 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  void _sendMessage(String value) {
+    FirebaseFirestore.instance.collection('messages').add({'value': value});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: Container(),
           ),
-          Input(),
+          Input(_sendMessage),
         ],
       ),
     );
