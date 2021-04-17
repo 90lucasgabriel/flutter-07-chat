@@ -4,47 +4,72 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
-  runApp(App());
+  runApp(Home());
 }
 
-class App extends StatelessWidget {
-  Future<void> addUser() async {
-    return FirebaseFirestore.instance
-        .collection('COLLECTION_NAME')
-        .doc('DOC_ID')
-        .collection('SUBCOLLECTION_NAME')
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  void firebaseInit() async {
+    await Firebase.initializeApp();
+    checkUpdates();
+  }
+
+  void addUser() async {
+    FirebaseFirestore.instance
+        .collection('users')
         .doc()
-        .set({'file': 'filename'});
+        .set({'name': 'Name Lastname'});
+  }
+
+  void getData() async {
+    QuerySnapshot messages =
+        await FirebaseFirestore.instance.collection('messages').get();
+    messages.docs.forEach((element) {
+      print(element.data());
+    });
+  }
+
+  void checkUpdates() {
+    FirebaseFirestore.instance
+        .collection('messages')
+        .snapshots()
+        .listen((event) {
+      event.docs.forEach((element) {
+        print(element.data());
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseInit();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TextButton(
-        onPressed: addUser,
-        child: Text(
-          "Add User",
-        ),
+      home: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextButton(
+            onPressed: addUser,
+            child: Text(
+              "Add User",
+            ),
+          ),
+          TextButton(
+            onPressed: getData,
+            child: Text(
+              "Read User documents",
+            ),
+          ),
+        ],
       ),
     );
-
-    // return FutureBuilder(
-    //   future: _firebaseInit(),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.connectionState == ConnectionState.done) {
-    //       return MaterialApp(
-    //         home: TextButton(
-    //           onPressed: addUser,
-    //           child: Text(
-    //             "Add User",
-    //           ),
-    //         ),
-    //       );
-    //     }
-
-    //     return MaterialApp(home: CircularProgressIndicator());
-    //   },
-    // );
   }
 }
