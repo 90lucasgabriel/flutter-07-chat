@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.lucasgabriel.chat.chat">
+    package="br.com.lucasgabriel.chat">
    <application
         android:label="chat"
         android:icon="@mipmap/ic_launcher">

@@ -1,4 +1,4 @@
-package br.com.lucasgabriel.chat.chat
+package br.com.lucasgabriel.chat
 
 import io.flutter.embedding.android.FlutterActivity
 
