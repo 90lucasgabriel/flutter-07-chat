@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 
 import 'package:chat/widgets/input.dart';
@@ -11,8 +13,51 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final GoogleSignIn googleSignin = GoogleSignIn();
+  User _user;
+
+  Future<User> _getUser() async {
+    try {
+      if (_user != null) return _user;
+
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      final User user = userCredential.user;
+
+      return user;
+    } catch (error) {
+      return null;
+    }
+  }
+
   void _sendMessage({String value, File file}) async {
-    Map<String, dynamic> data = {};
+    final User user = await _getUser();
+
+    if (user == null) {
+      Widget snackbar = SnackBar(
+        content: Text('Não foi possível realizar o login. Tente novamente.'),
+        backgroundColor: Colors.red,
+      );
+
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    }
+
+    Map<String, dynamic> data = {
+      'senderUid': user.uid,
+      'senderName': user.displayName,
+      'senderPhotoUrl': user.photoURL,
+    };
 
     if (file != null) {
       UploadTask task = FirebaseStorage.instance
@@ -30,6 +75,15 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     FirebaseFirestore.instance.collection('messages').add(data);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      _user = user;
+    });
   }
 
   @override

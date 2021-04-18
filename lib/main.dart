@@ -8,32 +8,28 @@ void main() {
   runApp(Home());
 }
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  void firebaseInit() async {
-    await Firebase.initializeApp();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    firebaseInit();
-  }
+class Home extends StatelessWidget {
+  final Future<FirebaseApp> _firebaseInit = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Chat Flutter',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        iconTheme: IconThemeData(color: Colors.green),
-      ),
-      home: ChatScreen(),
+    return FutureBuilder(
+      future: _firebaseInit,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp(
+            title: 'Chat Flutter',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              primarySwatch: Colors.green,
+              iconTheme: IconThemeData(color: Colors.green),
+            ),
+            home: ChatScreen(),
+          );
+        }
+
+        return CircularProgressIndicator();
+      },
     );
   }
 }
