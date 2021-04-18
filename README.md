@@ -28,6 +28,7 @@ Chat with Google authentication and Firebase realtime messages and pictures.
 ## 4. Technologies
 - [Flutter](https://flutter.dev/) _[1]_
 - [Material Design](https://material.io/) _[2]_
+- [Firebase](https://firebase.google.com/) _[3]_
 
 ## 5. Features
 - Material design;
@@ -59,3 +60,4 @@ flutter run
 ## 7. References
 1. Flutter - Available on https://flutter.dev/;
 2. Material Design - Available on https://material.io/;
+3. Firebase - Available on https://firebase.google.com/;
