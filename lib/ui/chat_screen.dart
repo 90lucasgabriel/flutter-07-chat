@@ -39,6 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       return user;
     } catch (error) {
+      print(error);
       return null;
     }
   }
@@ -72,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       UploadTask task = FirebaseStorage.instance
           .ref()
-          .child(DateTime.now().millisecondsSinceEpoch.toString())
+          .child(user.uid + DateTime.now().millisecondsSinceEpoch.toString())
           .putFile(file);
 
       TaskSnapshot taskSnapshot = await task.whenComplete(() {});

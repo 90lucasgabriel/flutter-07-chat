@@ -2,7 +2,8 @@
     package="br.com.lucasgabriel.chat">
    <application
         android:label="chat"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
