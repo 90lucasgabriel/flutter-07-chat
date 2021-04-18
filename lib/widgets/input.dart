@@ -36,7 +36,7 @@ class _InputState extends State<Input> {
             onPressed: () async {
               final ImagePicker _picker = ImagePicker();
               final PickedFile response =
-                  await _picker.getImage(source: ImageSource.camera);
+                  await _picker.getImage(source: ImageSource.gallery);
               final File file = File(response.path);
 
               if (response == null) return;
