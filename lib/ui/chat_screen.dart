@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 
+import 'package:chat/widgets/chat_message.dart';
 import 'package:chat/widgets/input.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -51,8 +52,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
+
+      return;
     }
 
+    print(user);
     Map<String, dynamic> data = {
       'senderUid': user.uid,
       'senderName': user.displayName,
@@ -113,9 +117,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       itemCount: documentList.length,
                       reverse: true,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(documentList[index].data()['value']),
-                        );
+                        return ChatMessage(documentList[index].data(), true);
                       },
                     );
                 }
