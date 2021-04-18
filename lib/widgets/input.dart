@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class Input extends StatefulWidget {
   /**
    * Send message to Firebase
    */
-  final Function(String) sendMessage;
+  final Function({String value, File file}) sendMessage;
 
   /**
    * Constructor
@@ -34,7 +36,15 @@ class _InputState extends State<Input> {
         children: [
           IconButton(
             icon: Icon(Icons.photo_camera),
-            onPressed: () {},
+            onPressed: () async {
+              final ImagePicker _picker = ImagePicker();
+              final PickedFile response =
+                  await _picker.getImage(source: ImageSource.camera);
+              final File file = File(response.path);
+
+              if (response == null) return;
+              widget.sendMessage(file: file);
+            },
           ),
           Expanded(
             child: TextField(
@@ -46,7 +56,7 @@ class _InputState extends State<Input> {
                 });
               },
               onSubmitted: (value) {
-                widget.sendMessage(value);
+                widget.sendMessage(value: value);
                 _reset();
               },
             ),
@@ -55,7 +65,7 @@ class _InputState extends State<Input> {
             icon: Icon(Icons.send),
             onPressed: _isSendEnabled
                 ? () {
-                    widget.sendMessage(_messageController.text);
+                    widget.sendMessage(value: _messageController.text);
                     _reset();
                   }
                 : null,
