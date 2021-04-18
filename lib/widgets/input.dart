@@ -3,14 +3,10 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class Input extends StatefulWidget {
-  /**
-   * Send message to Firebase
-   */
+  /// Send message to Firebase
   final Function({String value, File file}) sendMessage;
 
-  /**
-   * Constructor
-   */
+  /// Constructor
   Input(this.sendMessage);
 
   @override
